@@ -1,0 +1,300 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+body {
+    background-color: whitesmoke;
+}
+
+
+nav {
+    position: fixed;
+    width: 100%;
+    background-color: #212529;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 8%;
+    z-index: 100;
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+}
+
+.logo {
+
+    opacity: 0;
+    animation: slideRight 1s ease forwards;
+}
+
+.logo a {
+    color: #ffc107;
+    font-size: 30px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+nav ul li a {
+    display: inline-block;
+    text-decoration: none;
+    font-family: 'Times New Roman', Times, serif;
+    color: whitesmoke;
+    font-weight: 500;
+    padding: 8px 0;
+    font-size: 18px;
+    opacity: 0;
+    animation: slideTop .5s ease forwards;
+    animation-delay: calc(.2s * var(--i));
+
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+    color: #ffc107;
+
+}
+
+
+
+.menu-icon {
+    background-color: #ffc107;
+    font-size: 28px;
+    display: none;
+    opacity: 0;
+    animation: slideRight 1s ease forwards;
+}
+
+.sticky {
+    background-color: #343a40;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.5s ease-in-out;
+}
+
+/* Tambahkan gaya ini untuk menyesuaikan logo dan item navigasi saat digulir */
+.sticky .logo {
+    font-size: 20px;
+}
+
+.sticky .navbar a {
+    font-size: 16px;
+    margin: 0 15px;
+}
+
+
+
+
+.home {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px 8% 0;
+    overflow: hidden;
+
+}
+
+.home-content {
+    max-width: 630px;
+}
+
+.home-content h1 {
+    font-size: 50px;
+    line-height: 1.2;
+    color: #ffc107;
+    opacity: 0;
+    animation: slideBottom 1s ease forwards;
+
+
+
+}
+
+.home-content h3 {
+    font-size: 30px;
+    opacity: 0;
+    animation: slideRight 1s ease forwards;
+
+
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 28px;
+    background: #ffc107;
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    font-size: 25px;
+    color: white;
+    letter-spacing: 1px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 5px;
+    opacity: 0;
+    animation: slideTop 1s ease forwards;
+    animation-delay: 1.2s;
+}
+
+.btn:hover {
+    background: transparent;
+    color: #ffffff;
+}
+
+.img-home {
+    position: relative;
+    right: -7%;
+    width: 450px;
+    height: 450px;
+}
+
+.img-home .rhombus {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border: -20px solid rgb(0, 0, 0);
+
+    box-shadow: -15px 15px 15px rgba(0, 0, 0, 0.512);
+    opacity: 0;
+    animation: zoomOut 1s ease forwards;
+    animation-delay: 1.2s;
+}
+
+.img-home .rhombus img {
+    position: absolute;
+    top: 30px;
+    max-width: 350px;
+    left: 50px;
+    opacity: 0;
+    animation: logo 1s ease forwards;
+    animation-delay: 2s;
+}
+
+
+/* features */
+.features {
+    text-align: center;
+    padding: 80px 0;
+    /* Adjust the padding as needed */
+}
+
+.features h1 {
+    font-size: 50px;
+    line-height: 1.2;
+    color: #ffc107;
+    opacity: 0;
+    animation: slideBottom 1s ease forwards;
+}
+
+.features p {
+    opacity: 0;
+    animation: slideBottom 1s ease forwards;
+}
+
+.container.m-5 {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.icon-box-icon i {
+    font-size: 3em;
+
+}
+
+@media only screen and (max-width: 768px) {
+    nav {
+        flex-wrap: wrap;
+        position: fixed;
+        width: 100%;
+        top: 0;
+    }
+
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    nav ul li:last-of-type {
+        padding-bottom: 8px;
+    }
+
+    nav ul.hidden {
+        display: none;
+    }
+
+    .menu-icon {
+        display: flex;
+        align-items: center;
+    }
+}
+
+
+/* animatiom */
+@keyframes slideRight {
+    0% {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideBottom {
+    0% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideTop {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes zoomOut {
+    0% {
+        transform: scale(1.1);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes logo {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

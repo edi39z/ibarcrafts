@@ -1,0 +1,409 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+body {
+    background-color: whitesmoke;
+}
+
+
+nav {
+    position: fixed;
+    width: 100%;
+    background-color: #212529;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 8%;
+    z-index: 100;
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+}
+
+.logo {
+
+    opacity: 0;
+    animation: slideRight 1s ease forwards;
+}
+
+.logo a {
+    color: #ffc107;
+    font-size: 30px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+nav ul li a {
+    display: inline-block;
+    text-decoration: none;
+    font-family: 'Times New Roman', Times, serif;
+    color: whitesmoke;
+    font-weight: 500;
+    padding: 8px 0;
+    font-size: 18px;
+    opacity: 0;
+    animation: slideTop .5s ease forwards;
+    animation-delay: calc(.2s * var(--i));
+
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+    color: #ffc107;
+
+}
+
+.menu-icon {
+    background-color: #ffc107;
+    font-size: 28px;
+    display: none;
+    opacity: 0;
+    animation: slideRight 1s ease forwards;
+}
+
+.sticky {
+    background-color: #343a40;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.5s ease-in-out;
+}
+
+/* Tambahkan gaya ini untuk menyesuaikan logo dan item navigasi saat digulir */
+.sticky .logo {
+    font-size: 20px;
+}
+
+.sticky .navbar a {
+    font-size: 16px;
+    margin: 0 15px;
+}
+
+
+
+.heading {
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 20px auto;
+
+}
+
+.heading h1 {
+    font-size: 50px;
+    color: black;
+    margin-bottom: 25px;
+    margin-top: 55px;
+
+    border-bottom: 2px solid#ffc107;
+    padding-top: 6rem;
+    opacity: 0;
+    animation: slideBottom 1s ease forwards;
+}
+
+.heading h1 ::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    display: block;
+    margin: 0 auto;
+    background-color: black;
+
+
+}
+
+.heading p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 35px;
+    opacity: 0;
+    animation: zoomOut 1s ease forwards;
+}
+
+.box {
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px 20px;
+    border: -20px solid rgb(0, 0, 0);
+    box-shadow: -15px 15px 15px rgba(0, 0, 0, 0.512);
+
+    opacity: 0;
+    animation: zoomOut 1s ease forwards;
+    animation-delay: 1s;
+
+
+}
+
+
+.about {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.about-image {
+    flex: 0 0 50%;
+
+    overflow: hidden;
+}
+
+.about-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0;
+    animation: logo 1s ease forwards;
+    animation-delay: 2s;
+}
+
+
+.about-content {
+    flex: 0 0 50%;
+    padding: 20px;
+    opacity: 0;
+    animation: zoomOut 1s ease forwards;
+    animation-delay: 1, 7s;
+
+
+}
+
+.about-content h2 {
+    font-size: 40px;
+    font-style: italic;
+    margin-bottom: 15px;
+    color: black;
+    padding-bottom: 10px;
+    border-bottom: 2px solid#ffc107;
+
+}
+
+.about-content p {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: black;
+    padding-bottom: 10px;
+
+
+}
+
+.team-container {
+    text-align: center;
+    background: white;
+
+}
+
+.team-header {
+    padding-top: 30px;
+    color: black;
+    font-size: 20px;
+    margin: auto;
+    line-height: 50px;
+    border-bottom: 2px solid#ffc107;
+}
+
+/* .team-header h1 {
+
+    border-bottom: 2px solid#ffc107;
+} */
+
+.sub-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+.teams {
+    margin: 10px;
+    padding: 22px;
+    max-width: 30%;
+    cursor: pointer;
+    transition: 0.4s;
+    box-sizing: border-box;
+}
+
+.teams:hover {
+    background: darkgrey;
+    border-radius: 12px;
+}
+
+.teams img {
+    width: 200px;
+    height: 200px;
+}
+
+.name {
+    padding: 12px;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.desig {
+    font-style: italic;
+    color: #888;
+}
+
+.about-team {
+    margin: 20px 0;
+    font-weight: lighter;
+    color: #4e4e4e;
+}
+
+.sosial-medias {
+    margin: 14px;
+
+}
+
+.sosial-medias a {
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    transition: .4s;
+}
+
+.sosial-medias a:hover {
+    transform: scale(1.5);
+}
+
+.sosial-medias a i {
+    color: #444;
+}
+
+@media screen and (max-width : 768px) {
+    .heading {
+        padding: 0px 20px;
+    }
+
+    .heading h1 {
+        padding: 36px;
+    }
+
+    .heading p {
+        font-size: 17px;
+        margin-bottom: 0px;
+    }
+
+    .container {
+        padding: 0px;
+
+    }
+
+    .about {
+        padding: 20px;
+        flex-direction: column;
+    }
+
+    .about-image {
+        margin-right: 0px;
+        margin-bottom: 20px;
+    }
+
+    .about-content {
+        padding: 0px;
+        font-size: 16px;
+
+
+    }
+
+    .teams {
+        max-width: 100%;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        position: fixed;
+        width: 100%;
+        top: 0;
+    }
+
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    nav ul li:last-of-type {
+        padding-bottom: 8px;
+    }
+
+    nav ul.hidden {
+        display: none;
+    }
+
+    .menu-icon {
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* animatiom */
+@keyframes slideRight {
+    0% {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideBottom {
+    0% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideTop {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes zoomOut {
+    0% {
+        transform: scale(1.1);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes logo {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
