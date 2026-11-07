@@ -1,6 +1,7 @@
 ﻿<?php
 session_start();
-$koneksi = new mysqli("localhost", "id21641788_ibar", "BARNIbar39z@", "id21641788_ibarcrafts");
+require_once '../config/koneksi.php';
+require_once '../config/helper.php';
 
 if (!isset( $_SESSION['admin']))
 {

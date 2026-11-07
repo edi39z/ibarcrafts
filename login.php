@@ -1,11 +1,7 @@
 <?php
 session_start();
-
-$koneksi = new mysqli("localhost", "id21641788_ibar", "BARNIbar39z@", "id21641788_ibarcrafts");
-
-if ($koneksi->connect_error) {
-    die("Connection failed: " . $koneksi->connect_error);
-}
+require_once 'config/koneksi.php';
+require_once 'config/helper.php';
 ?>
 
 
@@ -46,6 +42,9 @@ if (isset($_POST['register'])) {
     $telepon = $_POST['telepon'];
     $password = $_POST['password'];
 
+    // Hash password sebelum disimpan ke database
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
     // Check if the email is already registered
     $cek_email = $koneksi->prepare("SELECT * FROM pelanggan WHERE email_pelanggan = ?");
     $cek_email->bind_param("s", $email);
@@ -55,13 +54,13 @@ if (isset($_POST['register'])) {
     if ($result_email->num_rows > 0) {
         echo "<div class='alert alert-danger'>Email telah digunakan</div>";
     } else {
-        // Insert new user to 'pelanggan' table
-        $register_query = $koneksi->prepare("INSERT INTO pelanggan (nama_pelanggan, email_pelanggan,telepon_pelanggan, password_pelanggan) VALUES (?, ?, ?,?)");
-        $register_query->bind_param("ssss", $nama, $email, $telepon, $password);
+        // Insert new user to 'pelanggan' table dengan password yang sudah di-hash
+        $register_query = $koneksi->prepare("INSERT INTO pelanggan (nama_pelanggan, email_pelanggan, telepon_pelanggan, password_pelanggan) VALUES (?, ?, ?, ?)");
+        $register_query->bind_param("ssss", $nama, $email, $telepon, $hashed_password);
 
         if ($register_query->execute()) {
             echo "<div class='alert alert-success'>Registrasi berhasil</div>";
-            header("Location: login.php"); // Ganti dengan halaman tujuan setelah registrasi berhasil
+            header("Location: login.php");
             exit();
         } else {
             echo "<div class='alert alert-danger'>Registrasi Gagal</div>";
@@ -72,8 +71,6 @@ if (isset($_POST['register'])) {
     }
 
     $cek_email->close();
-
-    
 }
 
 ?>
@@ -94,38 +91,76 @@ if (isset($_POST['register'])) {
         if (isset($_POST['login'])) {
             $user = $_POST['user'];
             $pass = $_POST['pass'];
-        
-            // Check in the 'admins' table
-            $admin_query = $koneksi->prepare("SELECT * FROM admins WHERE username = ? AND passwords = ?");
-            $admin_query->bind_param("ss", $user, $pass);
+
+            // Cek di tabel 'admins' dengan password_verify
+            $admin_query = $koneksi->prepare("SELECT * FROM admins WHERE username = ?");
+            $admin_query->bind_param("s", $user);
             $admin_query->execute();
             $admin_result = $admin_query->get_result();
-        
-            // Check in the 'pelanggan' table if no match in 'admins'
-            if ($admin_result->num_rows != 1) {
-                $pelanggan_query = $koneksi->prepare("SELECT * FROM pelanggan WHERE email_pelanggan = ? AND password_pelanggan = ?");
-                $pelanggan_query->bind_param("ss", $user, $pass);
+            $admin_query->close();
+
+            $admin_data = null;
+            $admin_login_ok = false;
+
+            if ($admin_result->num_rows == 1) {
+                $admin_data = $admin_result->fetch_assoc();
+                // Cek password: support password_verify ATAU plain text (untuk data lama)
+                if (password_verify($pass, $admin_data['passwords'])) {
+                    $admin_login_ok = true;
+                } elseif ($admin_data['passwords'] === $pass) {
+                    // Password lama plain text - update ke hash
+                    $new_hash = password_hash($pass, PASSWORD_DEFAULT);
+                    $update_admin = $koneksi->prepare("UPDATE admins SET passwords = ? WHERE username = ?");
+                    $update_admin->bind_param("ss", $new_hash, $user);
+                    $update_admin->execute();
+                    $update_admin->close();
+                    $admin_login_ok = true;
+                }
+            }
+
+            if (!$admin_login_ok) {
+                // Cek di tabel 'pelanggan' dengan password_verify
+                $pelanggan_query = $koneksi->prepare("SELECT * FROM pelanggan WHERE email_pelanggan = ?");
+                $pelanggan_query->bind_param("s", $user);
                 $pelanggan_query->execute();
                 $pelanggan_result = $pelanggan_query->get_result();
-        
+
                 if ($pelanggan_result->num_rows == 1) {
-                    $_SESSION['pelanggan'] = $pelanggan_result->fetch_assoc();
-                    echo "<div class='alert alert-info'>Pelanggan login successful</div>";
-                    echo "<meta http-equiv='refresh' content='1;url=index.php'>";
+                    $pelanggan_data = $pelanggan_result->fetch_assoc();
+                    // Cek password: support password_verify ATAU plain text (untuk data lama)
+                    if (password_verify($pass, $pelanggan_data['password_pelanggan'])) {
+                        // Regenerate session ID untuk mencegah session fixation
+                        session_regenerate_id(true);
+                        $_SESSION['pelanggan'] = $pelanggan_data;
+                        echo "<div class='alert alert-info'>Pelanggan login successful</div>";
+                        echo "<meta http-equiv='refresh' content='1;url=index.php'>";
+                    } elseif ($pelanggan_data['password_pelanggan'] === $pass) {
+                        // Password lama plain text - update ke hash
+                        $new_hash = password_hash($pass, PASSWORD_DEFAULT);
+                        $update_pelanggan = $koneksi->prepare("UPDATE pelanggan SET password_pelanggan = ? WHERE email_pelanggan = ?");
+                        $update_pelanggan->bind_param("ss", $new_hash, $user);
+                        $update_pelanggan->execute();
+                        $update_pelanggan->close();
+                        session_regenerate_id(true);
+                        $_SESSION['pelanggan'] = $pelanggan_data;
+                        echo "<div class='alert alert-info'>Pelanggan login successful</div>";
+                        echo "<meta http-equiv='refresh' content='1;url=index.php'>";
+                    } else {
+                        echo "<div class='alert alert-danger'>Login failed</div>";
+                        echo "<meta http-equiv='refresh' content='1;url=login.php'>";
+                    }
                 } else {
                     echo "<div class='alert alert-danger'>Login failed</div>";
                     echo "<meta http-equiv='refresh' content='1;url=login.php'>";
                 }
+                $pelanggan_query->close();
             } else {
-                $_SESSION['admin'] = $admin_result->fetch_assoc();
+                session_regenerate_id(true);
+                $_SESSION['admin'] = $admin_data;
                 echo "<div class='alert alert-info'>Admin login successful</div>";
                 echo "<meta http-equiv='refresh' content='1;url=admin/index.php'>";
             }
-        
-            $admin_query->close();
-            $pelanggan_query->close();
         }
-        
         ?>
         </div>
         <div class="toggle-container">

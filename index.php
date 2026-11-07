@@ -1,13 +1,7 @@
 <?php
 session_start();
-$koneksi = new mysqli("localhost", "id21641788_ibar", "BARNIbar39z@", "id21641788_ibarcrafts");
-
-
-// if (!isset($_SESSION['pelanggan'])) {
-//     echo "<script>alert('Anda harus login');</script>";
-//     echo "<script>location='login.php';</script>";
-//     exit(); 
-//   }
+require_once 'config/koneksi.php';
+require_once 'config/helper.php';
 ?>
 
 
@@ -151,14 +145,14 @@ $koneksi = new mysqli("localhost", "id21641788_ibar", "BARNIbar39z@", "id2164178
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        // Tampilkan setiap berita dalam card HTML
+                        // Sanitasi output untuk mencegah XSS
                         echo '<div class="col-sm-4 mb-3 mb-sm-0 g-2">';
                         echo '<div class="card" style="height: 100%;">';
                         echo '<div class="card-body">';
-                        echo '<img src="foto_berita/' . $row["foto_berita"] . '" class="card-img-top" alt="..." style="object-fit: cover; height: 300px;">';
+                        echo '<img src="foto_berita/' . e($row["foto_berita"]) . '" class="card-img-top" alt="..." style="object-fit: cover; height: 300px;">';
                         echo '<div class="card-body">';
-                        echo '<h5 class="card-title">' . $row["judul_berita"] . '</h5>';
-                        echo '<button type="button" class="btn btn-danger"><a href="' . $row["link_berita"] . '" class="text-decoration-none text-light">See</a></button>';
+                        echo '<h5 class="card-title">' . e($row["judul_berita"]) . '</h5>';
+                        echo '<button type="button" class="btn btn-danger"><a href="' . e($row["link_berita"]) . '" class="text-decoration-none text-light">See</a></button>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
@@ -181,96 +175,10 @@ $koneksi = new mysqli("localhost", "id21641788_ibar", "BARNIbar39z@", "id2164178
 
 
     
-    <footer class="bg-dark text-white pt-5 pb-4">
-        <div class="container text-center text-md-left">
-            <div class="row text-center text-md-left">
-                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-                    <h5 class="text-upper mb-4 font-weight-bold text-warning ">iBarCrafts</h5>
-                    <p>"Innovate Your World, Find Solutions at the Craft of Design."</p>
-                </div>
-                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-                    <h5 class="text-uppercase mb-4 font-weight-bold text-warning">Products</h5>
-                    <p>
-                        <a href="produk/web.php" class="text-white" style="text-decoration: none;">ThemeWeb</a>
-                    </p>
-                    <p>
-                        <a href="produk/gameasset.php" class="text-white" style="text-decoration: none;">GameAsset</a>
-                    </p>
-
-                    <p>
-                        <a href="produk/game.php" class="text-white" style="text-decoration: none;">Game</a>
-                    </p>
-
-                </div>
-                <!-- <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-                    <h5 class="text-upper mb-4 font-weight-bold text-warning">Sosial Media
-                    </h5>
-                    <p>
-                        <a href="" class="text-white" style="text-decoration: none;">IG</a>
-                    </p>
-                    <p>
-                        <a href="" class="text-white" style="text-decoration: none;">WA</a>
-                    </p>
-
-                    <p>
-                        <a href="" class="text-white" style="text-decoration: none;">GIHUB</a>
-                    </p>
-
-                </div> -->
-                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-
-                    <h5 class="text-uppercase mb-4 font-weight-bold text-warning">Contact
-                    </h5>
-                    <p>
-                        <i class="fas fa-home mx-3"></i>Medan,USU
-                    </p>
-                    <p>
-                        <i class="fas fa-envelope mx-3"></i>iBarCrafts@gmail.com
-                    </p>
-                    <p>
-                        <i class="fas fa-phone mx-3"></i>+62 877-638-032-71
-                    </p>
-
-                </div>
-            </div>
-
-            <hr class="mb-4">
-            <div class="row align-items-center">
-
-                <div class="col-md-7 col-lg-8">
-                    <p>Copyright © 2023 All rights reseved by :
-                        <a href="#" style="text-decoration : none;">
-                            <strong class="text-warning">iBarCrafts</strong>
-                        </a>
-                    </p>
-                </div>
-                <div class="col-md-5 col-lg-4">
-                    <div class="text-center text-md-right">
-                        <ul class="list-unstyled list-inline">
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white"
-                                    style="font-size: 23px;"><i class="fab fa-facebook"></i></a>
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white"
-                                    style="font-size: 23px;"><i class="fab fa-twitter"></i></a>
-
-                            </li>
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white"
-                                    style="font-size: 23px;"><i class="fab fa-instagram"></i></a>
-
-                            </li>
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white"
-                                    style="font-size: 23px;"><i class="fab fa-github"></i></a>
-
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </footer>
+    <?php
+    $rootPath = '';
+    include 'includes/footer.php';
+    ?>
 
 
 

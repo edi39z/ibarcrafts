@@ -1,0 +1,49 @@
+# ============================================================
+# .gitignore - iBarCrafts
+# File/folder yang TIDAK boleh di-upload ke GitHub
+# ============================================================
+
+# --- Folder sistem & cache ---
+.codebuddy/
+Thumbs.db
+.DS_Store
+
+# --- File kredensial & sensitif ---
+# (koneksi.php sudah aman karena pakai define, tapi backup tetap diabaikan)
+*.sql.bak
+*.sql.gz
+config/koneksi.local.php
+
+# --- File upload user (foto produk, foto pelanggan, zip) ---
+foto_produk/*
+!foto_produk/.gitkeep
+foto_pelanggan/*
+!foto_pelanggan/.gitkeep
+foto_berita/*
+!foto_berita/.gitkeep
+ZipFiles/*
+!ZipFiles/.gitkeep
+
+# --- Build/package ---
+build/
+dist/
+*.zip
+
+# --- Log & error ---
+*.log
+error_log
+
+# --- Editor & OS ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Dependency (jika nanti pakai composer) ---
+vendor/
+node_modules/
+
+# --- Env ---
+.env
+.env.local

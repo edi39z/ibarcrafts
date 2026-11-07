@@ -1,6 +1,7 @@
 <?php
 session_start();
-$koneksi = new mysqli("localhost", "id21641788_ibar", "BARNIbar39z@", "id21641788_ibarcrafts");
+require_once '../config/koneksi.php';
+require_once '../config/helper.php';
 
 if (!isset($_SESSION['pelanggan'])) {
     echo "<script>alert('Anda harus login');</script>";
@@ -10,8 +11,11 @@ if (!isset($_SESSION['pelanggan'])) {
 
 $id_pelanggan = $_SESSION['pelanggan']['id_pelanggan'];
 
-$query_pelanggan = "SELECT * FROM pelanggan WHERE id_pelanggan='$id_pelanggan'";
-$result_pelanggan = $koneksi->query($query_pelanggan);
+// Gunakan prepared statement untuk mencegah SQL injection
+$stmt = $koneksi->prepare("SELECT * FROM pelanggan WHERE id_pelanggan = ?");
+$stmt->bind_param("i", $id_pelanggan);
+$stmt->execute();
+$result_pelanggan = $stmt->get_result();
 
 if ($result_pelanggan) {
     $pelanggan = $result_pelanggan->fetch_assoc();
@@ -19,6 +23,7 @@ if ($result_pelanggan) {
     echo "Error: " . $koneksi->error;
     exit();
 }
+$stmt->close();
 
 // Logika pemrosesan formulir
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -26,9 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $namaPelanggan = $_POST['namaPelanggan'];
         $teleponPelanggan = $_POST['teleponPelanggan'];
 
-        // Update nama dan nomor telepon di database
-        $query_update_profile = "UPDATE pelanggan SET nama_pelanggan='$namaPelanggan', telepon_pelanggan='$teleponPelanggan' WHERE id_pelanggan='$id_pelanggan'";
-        $koneksi->query($query_update_profile);
+        // Update nama dan nomor telepon dengan prepared statement
+        $stmt_update = $koneksi->prepare("UPDATE pelanggan SET nama_pelanggan = ?, telepon_pelanggan = ? WHERE id_pelanggan = ?");
+        $stmt_update->bind_param("ssi", $namaPelanggan, $teleponPelanggan, $id_pelanggan);
+        $stmt_update->execute();
+        $stmt_update->close();
 
         // Perbarui foto jika ada file yang diunggah
         if (!empty($_FILES['foto']['name'])) {
@@ -38,9 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Pindahkan file yang diunggah ke direktori tujuan
             move_uploaded_file($_FILES['foto']['tmp_name'], $foto_path);
 
-            // Update nama file foto di database
-            $query_update_foto = "UPDATE pelanggan SET foto_pelanggan='$foto_name' WHERE id_pelanggan='$id_pelanggan'";
-            $koneksi->query($query_update_foto);
+            // Update nama file foto dengan prepared statement
+            $stmt_foto = $koneksi->prepare("UPDATE pelanggan SET foto_pelanggan = ? WHERE id_pelanggan = ?");
+            $stmt_foto->bind_param("si", $foto_name, $id_pelanggan);
+            $stmt_foto->execute();
+            $stmt_foto->close();
         }
 
         // Redirect atau tampilkan pesan sukses
@@ -66,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="row row-produk">
             <div class="col-lg-5">
             <div class="col-lg-5">
-    <img src="../foto_pelanggan/<?php echo $pelanggan['foto_pelanggan'];?>" alt="" class="img-fluid">
+    <img src="../foto_pelanggan/<?php echo e($pelanggan['foto_pelanggan']);?>" alt="" class="img-fluid">
 </div>
                 <div class="form-group">
                     <form method="post" enctype="multipart/form-data">
@@ -76,11 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
                         <div class="form-group">
                             <label for="namaPelanggan">Nama</label>
-                            <input type="text" class="form-control" name="namaPelanggan" id="namaPelanggan" value="<?php echo $pelanggan['nama_pelanggan']; ?>">
+                            <input type="text" class="form-control" name="namaPelanggan" id="namaPelanggan" value="<?php echo e($pelanggan['nama_pelanggan']); ?>">
                         </div>
                         <div class="form-group">
                             <label for="teleponPelanggan">Nomor Telepon</label>
-                            <input type="text" class="form-control" name="teleponPelanggan" id="teleponPelanggan" value="<?php echo $pelanggan['telepon_pelanggan']; ?>">
+                            <input type="text" class="form-control" name="teleponPelanggan" id="teleponPelanggan" value="<?php echo e($pelanggan['telepon_pelanggan']); ?>">
                         </div>
                         <button type="submit" class="btn btn-warning" name="updateProfile">Simpan Perubahan</button>
                     </form>

@@ -1,6 +1,7 @@
 <?php
 session_start();
-$koneksi = new mysqli("localhost", "id21641788_ibar", "BARNIbar39z@", "id21641788_ibarcrafts");
+require_once '../config/koneksi.php';
+require_once '../config/helper.php';
 
 if (isset($_SESSION['pelanggan'])) {
     $nama_pelanggan = $_SESSION['pelanggan']['nama_pelanggan'];
@@ -19,13 +20,15 @@ if (isset($_SESSION['pelanggan'])) {
         // Kategori
         $selectedCategories = implode(',', $_POST['kategori']);
 
-        // Insert data into database
-       // Insert data into database
-$query = "INSERT INTO produk (nama_produk, foto_produk, download_file, deskripsi_produk, kategori, dibuat_oleh)
-VALUES ('$_POST[nama]', '$namaFoto', '$namaZip', '$_POST[deskripsi]', '$selectedCategories', '{$_SESSION['pelanggan']['id_pelanggan']}')";
+        // Insert data into database dengan prepared statement
+        $nama = $_POST['nama'];
+        $deskripsi = $_POST['deskripsi'];
+        $dibuat_oleh = $_SESSION['pelanggan']['id_pelanggan'];
 
+        $stmt = $koneksi->prepare("INSERT INTO produk (nama_produk, foto_produk, download_file, deskripsi_produk, kategori, dibuat_oleh) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssi", $nama, $namaFoto, $namaZip, $deskripsi, $selectedCategories, $dibuat_oleh);
 
-        if ($koneksi->query($query)) {
+        if ($stmt->execute()) {
             echo "<div class='alert alert-info'>Data tersimpan</div>";
 
             // Periksa kategori yang dipilih
@@ -39,6 +42,7 @@ VALUES ('$_POST[nama]', '$namaFoto', '$namaZip', '$_POST[deskripsi]', '$selected
         } else {
             echo "<div class='alert alert-danger'>Gagal menyimpan data: " . $koneksi->error . "</div>";
         }
+        $stmt->close();
     }
 } else {
     echo "<script>alert('Anda harus login');</script>";

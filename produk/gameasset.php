@@ -1,13 +1,13 @@
-<!-- <?php
+<?php
 session_start();
-//koneksi ke database
-$koneksi = new mysqli("localhost", "id21641788_ibar", "BARNIbar39z@", "id21641788_ibarcrafts");
+require_once '../config/koneksi.php';
+require_once '../config/helper.php';
 if (!isset($_SESSION['pelanggan'])) {
     echo "<script>alert('Anda harus login');</script>";
     echo "<script>location='../login.php';</script>";
     exit(); 
   }
-?> -->
+?>
 
 
 <!doctype html>
@@ -147,11 +147,11 @@ if (!isset($_SESSION['pelanggan'])) {
             <?php while ($perproduk = $ambil->fetch_assoc()) { ?>
             <div class="col-lg-4 col-md-2 col-sm-4 col-6 mt-2">
                 <div class="card text-center">
-                    <img src="../foto_produk/<?php echo $perproduk['foto_produk'];?> " alt="..." style="object-fit: cover;">
+                    <img src="../foto_produk/<?php echo e($perproduk['foto_produk']);?> " alt="..." style="object-fit: cover;">
                     <div class="card-body">
-                        <h5 class="card-title"><?php echo $perproduk['nama_produk'];?></h5>
+                        <h5 class="card-title"><?php echo e($perproduk['nama_produk']);?></h5>
                         
-                        <a href="detail.php?id=<?php echo $perproduk['id_produk']; ?>" class="btn btn-warning d-grid">Detail</a>
+                        <a href="detail.php?id=<?php echo e($perproduk['id_produk']); ?>" class="btn btn-warning d-grid">Detail</a>
                     </div>
                 </div>
             </div>
@@ -161,96 +161,10 @@ if (!isset($_SESSION['pelanggan'])) {
 
 
     
-    <footer class="bg-dark text-white pt-5 pb-4">
-        <div class="container text-center text-md-left">
-            <div class="row text-center text-md-left">
-                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-                    <h5 class="text-upper mb-4 font-weight-bold text-warning ">iBarCrafts</h5>
-                    <p>"Innovate Your World, Find Solutions at the Craft of Design."</p>
-                </div>
-                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-                    <h5 class="text-uppercase mb-4 font-weight-bold text-warning">Products</h5>
-                    <p>
-                        <a href="web.php" class="text-white" style="text-decoration: none;">ThemeWeb</a>
-                    </p>
-                    <p>
-                        <a href="gameasset.php" class="text-white" style="text-decoration: none;">GameAsset</a>
-                    </p>
-
-                    <p>
-                        <a href="game.php" class="text-white" style="text-decoration: none;">Game</a>
-                    </p>
-
-                </div>
-                <!-- <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-                    <h5 class="text-upper mb-4 font-weight-bold text-warning">Sosial Media
-                    </h5>
-                    <p>
-                        <a href="" class="text-white" style="text-decoration: none;">IG</a>
-                    </p>
-                    <p>
-                        <a href="" class="text-white" style="text-decoration: none;">WA</a>
-                    </p>
-
-                    <p>
-                        <a href="" class="text-white" style="text-decoration: none;">GIHUB</a>
-                    </p>
-
-                </div> -->
-                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-
-                    <h5 class="text-uppercase mb-4 font-weight-bold text-warning">Contact
-                    </h5>
-                    <p>
-                        <i class="fas fa-home mx-3"></i>Medan,USU
-                    </p>
-                    <p>
-                        <i class="fas fa-envelope mx-3"></i>iBarCrafts@gmail.com
-                    </p>
-                    <p>
-                        <i class="fas fa-phone mx-3"></i>+62 877-638-032-71
-                    </p>
-
-                </div>
-            </div>
-
-            <hr class="mb-4">
-            <div class="row align-items-center">
-
-                <div class="col-md-7 col-lg-8">
-                    <p>Copyright ©2023 All rights reseved by :
-                        <a href="#" style="text-decoration : none;">
-                            <strong class="text-warning">iBarCrafts</strong>
-                        </a>
-                    </p>
-                </div>
-                <div class="col-md-5 col-lg-4">
-                    <div class="text-center text-md-right">
-                        <ul class="list-unstyled list-inline">
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white"
-                                    style="font-size: 23px;"><i class="fab fa-facebook"></i></a>
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white"
-                                    style="font-size: 23px;"><i class="fab fa-twitter"></i></a>
-
-                            </li>
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white"
-                                    style="font-size: 23px;"><i class="fab fa-instagram"></i></a>
-
-                            </li>
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white"
-                                    style="font-size: 23px;"><i class="fab fa-github"></i></a>
-
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </footer>
+    <?php
+    $rootPath = '../';
+    include '../includes/footer.php';
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
